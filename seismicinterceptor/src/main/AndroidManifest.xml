@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.charbgr.seismicinterceptor">
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <activity
+            android:name=".LogListActivity"
+            android:label="@string/logs"
+            android:theme="@style/SeismicTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LogDetailActivity"
+            android:label="@string/logs"
+            android:theme="@style/SeismicTheme">
+
+        </activity>
+    </application>
+
+</manifest>

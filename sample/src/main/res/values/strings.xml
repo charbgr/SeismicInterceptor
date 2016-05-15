@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SeismicRetrofit</string>
+    <string name="title_activity_seismic">SeismicActivity</string>
+</resources>

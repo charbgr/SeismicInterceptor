@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gray_30">#4D4D4D</color>
+    <color name="gray_70">#B3B3B3</color>
+
+    <color name="green">#4CAF50</color>
+    <color name="deep_orange">#FF5722</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="success_response">@color/green</color>
+    <color name="failed_response">@color/deep_orange</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorSecondary">@color/black</color>
+</resources>

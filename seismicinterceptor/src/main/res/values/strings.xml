@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SeismicInterceptor</string>
+    <string name="logs">Logs</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_info">Info</string>
+    <string name="log_request">Request</string>
+    <string name="log_response">Response</string>
+</resources>
