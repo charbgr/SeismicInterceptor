@@ -15,7 +15,7 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.charbgr.seismicinterceptor.OkHttpUtils.cloneResponse;
+import static com.charbgr.seismicinterceptor.utils.OkHttpUtils.cloneResponse;
 
 public class SeismicInterceptor implements Interceptor, ShakeDetector.Listener {
 

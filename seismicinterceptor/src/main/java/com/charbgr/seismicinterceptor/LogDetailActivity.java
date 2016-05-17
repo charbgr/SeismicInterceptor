@@ -9,7 +9,8 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import java.io.IOException;
+import com.charbgr.seismicinterceptor.utils.OkHttpUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;

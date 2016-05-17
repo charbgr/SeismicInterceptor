@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.charbgr.seismicinterceptor.listeners.OnSeismicItemClickListener;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 

@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import java.io.IOException;
+import com.charbgr.seismicinterceptor.listeners.OnSeismicItemClickListener;
 
 import okhttp3.Request;
 import okhttp3.Response;
