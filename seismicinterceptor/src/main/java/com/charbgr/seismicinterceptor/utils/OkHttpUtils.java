@@ -6,6 +6,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -19,6 +21,32 @@ public class OkHttpUtils {
 
     private static final int DEFAULT_INDENT_SPACES = 4;
     private static final Charset UTF8 = Charset.forName("UTF-8");
+
+
+    public static String stringifyHeaders(Map<String, List<String>> headers) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+                appendKey(sb, entry.getKey());
+                appendValue(sb, entry.getValue());
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private static void appendKey(StringBuilder sb, String key) {
+        if (key != null) {
+            sb.append('[').append(key).append("]\n");
+        }
+    }
+
+    private static void appendValue(StringBuilder sb, List<String> values) {
+        if (values != null) {
+            sb.append(TextUtils.join(", ", values)).append("\n\n");
+        }
+    }
 
     public static Response cloneResponse(Response response) {
         try {

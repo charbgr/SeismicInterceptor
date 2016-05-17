@@ -18,11 +18,11 @@ import okhttp3.Response;
 
 class LogAdapter extends RecyclerView.Adapter<LogAdapter.SeismicViewHolder> {
 
-    private List<Pair<Request, Response>> logList;
+    private List<Pair<Request, ResponseExceptionWrapper>> logList;
     private WeakReference<OnSeismicItemClickListener> onSeismicItemClickListenerRef;
 
 
-    public LogAdapter(List<Pair<Request, Response>> logList) {
+    public LogAdapter(List<Pair<Request, ResponseExceptionWrapper>> logList) {
         this.logList = logList;
     }
 
@@ -37,7 +37,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.SeismicViewHolder> {
 
     @Override
     public void onBindViewHolder(final SeismicViewHolder holder, int position) {
-        final Pair<Request, Response> log = getItemAt(position);
+        final Pair<Request, ResponseExceptionWrapper> log = getItemAt(position);
         final LogItemViewModel viewModel = new LogItemViewModel(
                 holder.itemView.getContext(),
                 log.first,
@@ -64,7 +64,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.SeismicViewHolder> {
         return logList.size();
     }
 
-    public Pair<Request, Response> getItemAt(int position) {
+    public Pair<Request, ResponseExceptionWrapper> getItemAt(int position) {
         return logList.get(position);
     }
 

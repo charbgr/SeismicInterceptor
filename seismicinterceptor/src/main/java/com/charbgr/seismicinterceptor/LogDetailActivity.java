@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Request;
-import okhttp3.Response;
 
 public class LogDetailActivity extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class LogDetailActivity extends AppCompatActivity {
     private int logPosition;
 
     private Request request;
-    private Response response;
+    private ResponseExceptionWrapper responseExceptionWrapper;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -44,9 +43,9 @@ public class LogDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        Pair<Request, Response> pair = seismicInterceptor.getLogs().get(logPosition);
+        Pair<Request, ResponseExceptionWrapper> pair = seismicInterceptor.getLogs().get(logPosition);
         this.request = pair.first;
-        this.response = pair.second;
+        this.responseExceptionWrapper = pair.second;
 
         bindViews();
         setUpTabs();
@@ -57,7 +56,14 @@ public class LogDetailActivity extends AppCompatActivity {
         tabsAdapter = new TabsAdapter(getSupportFragmentManager());
         addTab(getString(R.string.log_info), generateBasicInfo(), null);
         addTab(getString(R.string.log_request), request.headers().toMultimap(), OkHttpUtils.requestToString(request));
-        addTab(getString(R.string.log_response), response.headers().toMultimap(), OkHttpUtils.responseToString(response));
+
+        if (responseExceptionWrapper.isResponse()) {
+            addTab(getString(R.string.log_response), responseExceptionWrapper.getResponse().headers().toMultimap(), OkHttpUtils.responseToString(responseExceptionWrapper.getResponse()));
+        } else if (responseExceptionWrapper.isException()) {
+            Map<String, List<String>> errorMap = new LinkedHashMap<>();
+            errorMap.put("Error", Arrays.asList(responseExceptionWrapper.getException().getMessage()));
+            addTab(getString(R.string.log_exception), errorMap, null);
+        }
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.setAdapter(tabsAdapter);
@@ -71,7 +77,7 @@ public class LogDetailActivity extends AppCompatActivity {
 
     private void addTab(String tabName, Map<String, List<String>> headers, String body) {
 
-        if(body != null){
+        if (body != null) {
             headers.put("Body", Arrays.asList(body));
         }
 
@@ -85,13 +91,15 @@ public class LogDetailActivity extends AppCompatActivity {
         Map<String, List<String>> info = new LinkedHashMap<>();
         info.put("URL", Arrays.asList(request.url().toString()));
         info.put("VERB", Arrays.asList(request.method()));
-        info.put("Status", Arrays.asList(String.valueOf(response.code())));
 
-        if(request.cacheControl() != null)
+        if (responseExceptionWrapper.isResponse())
+            info.put("Status", Arrays.asList(String.valueOf(responseExceptionWrapper.getResponse().code())));
+
+        if (request.cacheControl() != null)
             info.put("Cache-Request", Arrays.asList(request.cacheControl().toString()));
 
-        if(response.cacheControl() != null)
-            info.put("Cache-Response", Arrays.asList(response.cacheControl().toString()));
+        if (responseExceptionWrapper.isResponse() && responseExceptionWrapper.getResponse().cacheControl() != null)
+            info.put("Cache-Response", Arrays.asList(responseExceptionWrapper.getResponse().cacheControl().toString()));
 
         return info;
     }

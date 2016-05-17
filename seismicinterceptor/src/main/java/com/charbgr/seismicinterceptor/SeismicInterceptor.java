@@ -36,7 +36,7 @@ public class SeismicInterceptor implements Interceptor, ShakeDetector.Listener {
 
     private Context context;
     private ShakeDetector shakeDetector;
-    private List<Pair<Request, Response>> logs;
+    private List<Pair<Request, ResponseExceptionWrapper>> logs;
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -45,15 +45,16 @@ public class SeismicInterceptor implements Interceptor, ShakeDetector.Listener {
         try {
             response = chain.proceed(request);
         } catch (Exception e) {
-            System.out.println("<-- HTTP FAILED: " + e);
+            logs.add(new Pair<>(request, new ResponseExceptionWrapper(e)));
             throw e;
         }
 
-        logs.add(new Pair<>(request, cloneResponse(response)));
+
+        logs.add(new Pair<>(request, new ResponseExceptionWrapper(cloneResponse(response))));
         return response;
     }
 
-    public List<Pair<Request, Response>> getLogs() {
+    public List<Pair<Request, ResponseExceptionWrapper>> getLogs() {
         return logs;
     }
 

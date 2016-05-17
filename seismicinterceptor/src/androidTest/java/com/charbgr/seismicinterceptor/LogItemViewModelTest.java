@@ -5,13 +5,15 @@ import android.support.v4.content.ContextCompat;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import java.net.SocketTimeoutException;
+
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.charbgr.seismicinterceptor.OkHttpTestUtils.convertToRequestBody;
-import static com.charbgr.seismicinterceptor.OkHttpTestUtils.convertToResponseBody;
-import static com.charbgr.seismicinterceptor.OkHttpTestUtils.generateMockRequestWith;
+import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.convertToRequestBody;
+import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.convertToResponseBody;
+import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.generateMockRequestWith;
 
 public class LogItemViewModelTest extends InstrumentationTestCase {
 
@@ -34,7 +36,7 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
                 .request(request)
                 .build();
 
-        viewModel = new LogItemViewModel(context, request, response);
+        viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(response));
         assertEquals(ContextCompat.getColor(context, R.color.success_response), viewModel.getHttpStatusBgColor());
     }
 
@@ -51,7 +53,7 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
                 .request(request)
                 .build();
 
-        viewModel = new LogItemViewModel(context, request, response);
+        viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(response));
         assertEquals(ContextCompat.getColor(context, R.color.failed_response), viewModel.getHttpStatusBgColor());
     }
 
@@ -68,7 +70,7 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
                 .request(request)
                 .build();
 
-        viewModel = new LogItemViewModel(context, request, response);
+        viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(response));
         assertEquals("text/plain", viewModel.getContentType());
         assertEquals("GET", viewModel.getHttpVerb());
         assertEquals("http://localhost/", viewModel.getUrl());
@@ -82,10 +84,25 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
                 .request(request)
                 .build();
 
-        viewModel = new LogItemViewModel(context, request, response);
+        viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(response));
         assertEquals("Unknown", viewModel.getContentType());
         assertEquals("POST", viewModel.getHttpVerb());
     }
+
+    @SmallTest
+    public void testIfExceptionIsCorrectlyCalculated() {
+        context = getInstrumentation().getContext();
+        request = generateMockRequestWith("GET", null);
+        SocketTimeoutException exception = new SocketTimeoutException("timeout!");
+
+        viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(exception));
+        assertNull(viewModel.getContentType());
+        assertEquals("GET", viewModel.getHttpVerb());
+        assertEquals("http://localhost/", viewModel.getUrl());
+        assertEquals(ContextCompat.getColor(context, R.color.failed_response), viewModel.getHttpStatusBgColor());
+    }
+
+
 
 
 }

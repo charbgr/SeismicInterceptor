@@ -8,7 +8,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class OkHttpTestUtils {
+public class OkHttpHelperUtils {
     public static RequestBody convertToRequestBody(String value) {
         return RequestBody.create(MediaType.parse("text/plain; foo"), value);
     }

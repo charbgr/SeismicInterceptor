@@ -10,7 +10,7 @@ class LogItemViewModel {
 
     private final Context context;
     private final Request request;
-    private final Response response;
+    private final ResponseExceptionWrapper responseExceptionWrapper;
 
     private String httpVerb;
 
@@ -19,10 +19,10 @@ class LogItemViewModel {
     private String url;
     private String contentType;
 
-    public LogItemViewModel(Context context, Request request, Response response) {
+    public LogItemViewModel(Context context, Request request, ResponseExceptionWrapper response) {
         this.context = context;
         this.request = request;
-        this.response = response;
+        this.responseExceptionWrapper = response;
 
         setup();
     }
@@ -44,15 +44,22 @@ class LogItemViewModel {
 
 
     private void setupResponseValues() {
-        if (response == null)
+        if (responseExceptionWrapper == null)
             return;
 
-        this.httpStatusBgColor = ContextCompat.getColor(
-                context,
-                response.isSuccessful() ? R.color.success_response : R.color.failed_response
-        );
+        if (responseExceptionWrapper.isResponse()) {
+            Response response = responseExceptionWrapper.getResponse();
+            this.httpStatusBgColor = ContextCompat.getColor(
+                    context,
+                    response.isSuccessful() ? R.color.success_response : R.color.failed_response
+            );
 
-        this.contentType = response.header("Content-Type", "Unknown").split(";")[0];
+            this.contentType = response.header("Content-Type", "Unknown").split(";")[0];
+        } else {
+            this.httpStatusBgColor = ContextCompat.getColor(
+                    context,
+                    R.color.failed_response);
+        }
     }
 
 

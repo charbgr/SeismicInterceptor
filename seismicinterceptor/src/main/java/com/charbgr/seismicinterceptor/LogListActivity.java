@@ -58,7 +58,7 @@ public class LogListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSeismicItemClick(Request request, Response response, int position) {
+    public void onSeismicItemClick(Request request, ResponseExceptionWrapper responseExceptionWrapper, int position) {
         Intent intent = new Intent(this, LogDetailActivity.class);
         intent.putExtra(LogDetailActivity.LOG_POSITION, position);
         startActivity(intent);
