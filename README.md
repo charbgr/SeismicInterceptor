@@ -3,6 +3,7 @@ Seismic Interceptor
 ![SeismicInterceptorLogo](https://raw.githubusercontent.com/charbgr/SeismicInterceptor/master/seismicinterceptor/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 An [OkHttp interceptor][1] which shows logs from OkHttp request and response data by shaking your device.
+![SeismicInterceptorSample](https://raw.githubusercontent.com/charbgr/SeismicInterceptor/master/seismic_interceptor_sample.gif)
 
 Add this to your OkHttpClient setup:
 ```java
