@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.charbgr.seismicinterceptor.SeismicInterceptor;
-import com.squareup.seismic.ShakeDetector;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SeismicInterceptor.start(this, ShakeDetector.SENSITIVITY_LIGHT);
+        SeismicInterceptor.start(this, 11);
     }
 
     @Override
