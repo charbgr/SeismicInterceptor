@@ -1,32 +1,39 @@
 package com.charbgr.seismicinterceptor;
 
 import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.ContextCompat;
-import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-
 import java.net.SocketTimeoutException;
-
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.convertToRequestBody;
 import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.convertToResponseBody;
 import static com.charbgr.seismicinterceptor.OkHttpHelperUtils.generateMockRequestWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-public class LogItemViewModelTest extends InstrumentationTestCase {
+@RunWith(AndroidJUnit4.class)
+public class LogItemViewModelTest {
 
     private Context context;
     private Request request;
     private Response response;
     private LogItemViewModel viewModel;
 
-
-    @SmallTest
-    public void testIfSuccessResponseIsCorrectlyCalculated() {
-        context = getInstrumentation().getContext();
+    @Before
+    public void setUp() {
+        context = InstrumentationRegistry.getInstrumentation().getContext();
         request = generateMockRequestWith("GET", null);
+    }
+
+    @Test
+    public void testIfSuccessResponseIsCorrectlyCalculated() {
         response = new Response.Builder()
                 .code(200)
                 .message("OK")
@@ -40,10 +47,8 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
         assertEquals(ContextCompat.getColor(context, R.color.success_response), viewModel.getHttpStatusBgColor());
     }
 
-    @SmallTest
+    @Test
     public void testIfFailResponseIsCorrectlyCalculated() {
-        context = getInstrumentation().getContext();
-        request = generateMockRequestWith("GET", null);
         response = new Response.Builder()
                 .code(404)
                 .message("OK")
@@ -57,10 +62,8 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
         assertEquals(ContextCompat.getColor(context, R.color.failed_response), viewModel.getHttpStatusBgColor());
     }
 
-    @SmallTest
+    @Test
     public void testIfElementsCorrectlyCalculated() {
-        context = getInstrumentation().getContext();
-        request = generateMockRequestWith("GET", null);
         response = new Response.Builder()
                 .code(404)
                 .message("OK")
@@ -89,10 +92,8 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
         assertEquals("POST", viewModel.getHttpVerb());
     }
 
-    @SmallTest
+    @Test
     public void testIfExceptionIsCorrectlyCalculated() {
-        context = getInstrumentation().getContext();
-        request = generateMockRequestWith("GET", null);
         SocketTimeoutException exception = new SocketTimeoutException("timeout!");
 
         viewModel = new LogItemViewModel(context, request, new ResponseExceptionWrapper(exception));
@@ -101,8 +102,4 @@ public class LogItemViewModelTest extends InstrumentationTestCase {
         assertEquals("http://localhost/", viewModel.getUrl());
         assertEquals(ContextCompat.getColor(context, R.color.failed_response), viewModel.getHttpStatusBgColor());
     }
-
-
-
-
 }
