@@ -34,20 +34,20 @@ public class MainActivity extends AppCompatActivity {
 
                     GitHub g = API.createGithub();
 
-//                    for (int i = 0; i < API.URLS.length; i++) {
-//                        g.get(API.URLS[i])
-//                                .enqueue(new Callback<Object>() {
-//                                    @Override
-//                                    public void onResponse(Call<Object> call, Response<Object> response) {
-//                                        System.out.println("response : " + response.isSuccessful());
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(Call<Object> call, Throwable t) {
-//                                        t.printStackTrace();
-//                                    }
-//                                });
-//                    }
+                    for (int i = 0; i < API.URLS.length; i++) {
+                        g.get(API.URLS[i])
+                                .enqueue(new Callback<Object>() {
+                                    @Override
+                                    public void onResponse(Call<Object> call, Response<Object> response) {
+                                        System.out.println("response : " + response.isSuccessful());
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Object> call, Throwable t) {
+                                        t.printStackTrace();
+                                    }
+                                });
+                    }
 
                     g.contributors("square", "retrofit").enqueue(new Callback<List<Contributor>>() {
                         @Override

@@ -1,21 +1,22 @@
 package com.charbgr.seismicinterceptor.utils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.http.HttpEngine;
 import okio.Buffer;
 import okio.BufferedSource;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
+import static okhttp3.internal.http.StatusLine.HTTP_CONTINUE;
 
 public class OkHttpUtils {
 
@@ -74,14 +75,14 @@ public class OkHttpUtils {
     public static String responseToString(final Response response) {
         ResponseBody responseBody = response.body();
 
-        if (HttpEngine.hasBody(response)) {
+        if (hasBody(response)) {
             BufferedSource source = responseBody.source();
             try {
                 source.request(Long.MAX_VALUE); // Buffer the entire body.
             } catch (IOException e) {
                 return null;
             }
-            Buffer buffer = source.buffer();
+            Buffer buffer = source.getBuffer();
 
             Charset charset = UTF8;
             MediaType contentType = responseBody.contentType();
@@ -107,5 +108,41 @@ public class OkHttpUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Returns true if the response must have a (possibly 0-length) body. See RFC 2616 section 4.3.
+     */
+    public static boolean hasBody(Response response) {
+        // HEAD requests never yield a body regardless of the response headers.
+        if (response.request().method().equals("HEAD")) {
+            return false;
+        }
+
+        int responseCode = response.code();
+        if ((responseCode < HTTP_CONTINUE || responseCode >= 200)
+            && responseCode != HTTP_NO_CONTENT
+            && responseCode != HTTP_NOT_MODIFIED) {
+            return true;
+        }
+
+        // If the Content-Length or Transfer-Encoding headers disagree with the
+        // response code, the response is malformed. For best compatibility, we
+        // honor the headers.
+        long contentLength = stringToLong(response.header("Content-Length"));
+        if (contentLength != -1 || "chunked".equalsIgnoreCase(response.header("Transfer-Encoding"))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static long stringToLong(String s) {
+        if (s == null) return -1;
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }

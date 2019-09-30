@@ -39,8 +39,8 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
-    implementation 'com.squareup:seismic:1.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.0.0'
+    api 'com.squareup:seismic:1.0.2'
 
     androidTestImplementation 'junit:junit:4.12'
     testImplementation 'junit:junit:4.12'
